@@ -1,4 +1,4 @@
 ﻿# PyOpenglGame_DK_Arcade
 
-Danna Paulina
-Max Rivera
+#Danna Aguilar 
+#Max Rivera
