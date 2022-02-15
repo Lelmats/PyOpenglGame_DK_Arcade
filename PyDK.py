@@ -1,8 +1,9 @@
 from fnmatch import translate
 from OpenGL.GL import *
 from glew_wish import *
+from math import *
+
 import glfw
-import math
 
 from collision_escaleras import *
 from draw_stairs import *
@@ -12,8 +13,39 @@ from draw_plataforms import *
 window = None
 velocidad = 0.5
 tiempo_anterior = 0.0
+
 posicion_cuadrado = [-0.4,0.9, 0.0]
 
+posicion_barrel = [-0.4,0.85, 0.0]
+direccion_barrelx = 1
+direccion_barrely = 0
+velocidad_barrel = 0.5
+
+def actualizar_barrel(tiempo_delta):
+    global direccion_barrelx
+    global direccion_barrely
+    global velocidad_barrel
+
+    cantidad_movimiento = velocidad_barrel * tiempo_delta
+
+    if direccion_barrelx == 0:
+        posicion_barrel[0] = posicion_barrel[0] - cantidad_movimiento
+    elif direccion_barrelx == 1:    
+        posicion_barrel[0] = posicion_barrel[0] + cantidad_movimiento
+
+    # elif direccion_barrely == 1: 
+    #     posicion_barrel[1] = posicion_barrel[1] + cantidad_movimiento
+
+    if posicion_barrel[0] <= -0.45 and direccion_barrelx == 0:
+        direccion_barrelx = 1
+        if direccion_barrely == 0:
+            posicion_barrel[1] = posicion_barrel[1] - (cantidad_movimiento + 0.3)
+        
+    if posicion_barrel[0] >= 0.75 and direccion_barrelx == 1:
+        direccion_barrelx = 0
+        if direccion_barrely == 0:
+            posicion_barrel[1] = posicion_barrel[1] - (cantidad_movimiento + 0.3)
+    
 
 def actualizar():
     global tiempo_anterior
@@ -23,6 +55,7 @@ def actualizar():
     global estado_tecla_arriba
     global cantidad_movimiento
     global estado_tecla_abajo
+    global posicion_barrel
 
     tiempo_actual = glfw.get_time()
     #Cuanto tiempo paso entre la ejecucion actual
@@ -60,8 +93,10 @@ def actualizar():
     # if estado_tecla_a == glfw.PRESS:
     #     posicion_cuadrado[0] = posicion_cuadrado[0] - cantidad_movimiento
 
+    actualizar_barrel(tiempo_delta)
+
     tiempo_anterior = tiempo_actual
-    
+
 def colisionando():
     colisionando = False
     #Metodo de bounding box:
@@ -69,15 +104,10 @@ def colisionando():
     #Extrema izquierda del triangulo <= Extrema derecha cuadrado
     #Extremo superior del triangulo >= Extremo inferior del cuadrado
     #Extremo inferior del triangulo <= Extremo superior del cuadrado
-    if (posicion_triangulo[0] + 0.05 >= posicion_plataforma_0_1[0] - 0.7
-    and posicion_triangulo[0] - 0.05 <= posicion_plataforma_0_1[0] + 0.2 
-    and posicion_triangulo[1] + 0.05 >= posicion_plataforma_0_1[1] - 0
-    and posicion_triangulo[1] - 0.05 <= posicion_plataforma_0_1[1] + 0.099):
-        colisionando = True
-    if (posicion_triangulo[0] + 0.05 >= posicion_plataforma_1[0] - 0.0
-    and posicion_triangulo[0] - 0.05 <= posicion_plataforma_1[0] + 0.8 
-    and posicion_triangulo[1] + 0.05 >= posicion_plataforma_1[1] - 0
-    and posicion_triangulo[1] - 0.05 <= posicion_plataforma_1[1] + 0.099):
+    if (posicion_triangulo[0] + 0.05 >= posicion_barrel[0] - 0.05
+    and posicion_triangulo[0] - 0.05 <= posicion_barrel[0] + 0.05 
+    and posicion_triangulo[1] + 0.05 >= posicion_barrel[1] - 0.05
+    and posicion_triangulo[1] - 0.05 <= posicion_barrel[1] + 0.05):
         colisionando = True
     return colisionando
 
@@ -88,7 +118,6 @@ def draw_triangulo():
     glBegin(GL_TRIANGLES)
     if colisionando():
         glColor3f(0,0,1)
-        
     else:
         glColor3f(1,0,0.7)
 
@@ -139,6 +168,20 @@ def draw_cuadrado():
     glEnd()
     glPopMatrix()
 
+def draw_barrel():
+    sides = 32    
+    radius = 0.04  
+    glPushMatrix()
+    glTranslatef(posicion_barrel[0], posicion_barrel[1], 0.0)
+    glBegin(GL_POLYGON)
+    glColor3f(0.9,0.9,0.3)    
+    for i in range(100):    
+        cosine= radius * cos(i*2*pi/sides)     
+        sine  = radius * sin(i*2*pi/sides)   
+        glVertex2f(cosine,sine)
+    glEnd()
+    glPopMatrix()      
+
 def draw():  
     draw_plataform_0_1()
     draw_escaleras()
@@ -155,11 +198,11 @@ def draw():
     draw_plataform_7()   
     draw_cuadrado()
     draw_triangulo()
-
+    draw_barrel()
 
 def main():
     global window
-
+    global tiempo_anterior
     width = 900
     height = 900
     #Inicializar GLFW
