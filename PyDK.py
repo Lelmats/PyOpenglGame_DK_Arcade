@@ -2,12 +2,20 @@ from fnmatch import translate
 from OpenGL.GL import *
 from glew_wish import *
 from math import *
+import pygame
+
+from pygame import mixer
 
 import glfw
 
 from collision_escaleras import *
 from draw_stairs import *
 from draw_plataforms import *
+
+pygame.mixer.init()
+
+mixer.music.load("LVL_Music.wav")
+mixer.music.play(-1)
 
 #unidades por segundo
 window = None
@@ -20,6 +28,7 @@ posicion_barrel = [-0.4,0.85, 0.0]
 direccion_barrelx = 1
 direccion_barrely = 0
 velocidad_barrel = 0.5
+
 
 def actualizar_barrel(tiempo_delta):
     global direccion_barrelx
