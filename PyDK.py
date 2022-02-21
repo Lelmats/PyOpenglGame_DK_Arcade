@@ -34,7 +34,7 @@ posicion_cuadrado = [-0.4,0.9, 0.0]
 posicion_barrel = [-0.4,0.85, 0.0]
 direccion_barrelx = 1
 direccion_barrely = 0
-velocidad_barrel = 0.5
+velocidad_barrel = 0.7
 
 
 def actualizar_barrel(tiempo_delta):
@@ -42,6 +42,7 @@ def actualizar_barrel(tiempo_delta):
     global direccion_barrely
     global velocidad_barrel
     global tiempo_anterior
+    global posicion_barrel
 
     cantidad_movimiento = velocidad_barrel * tiempo_delta
 
@@ -62,6 +63,9 @@ def actualizar_barrel(tiempo_delta):
         direccion_barrelx = 0
         if direccion_barrely == 0:
             posicion_barrel[1] = posicion_barrel[1] - (cantidad_movimiento + 0.3)
+    
+    if posicion_barrel[1] <= -0.9:
+        posicion_barrel = [-0.4,0.85, 0.0]
     
 
 def actualizar():
@@ -165,6 +169,7 @@ def draw_triangulo():
     glBegin(GL_TRIANGLES)
     if colisionando():
         glColor3f(0,0,1)
+        glfw.destroy_window(window)
     else:
         glColor3f(1,0,0.7)
 
@@ -179,15 +184,15 @@ def draw_triangulo():
     glVertex3f(0.05,-0.05,0)
     glEnd()
 
-    glBegin(GL_LINE_LOOP)
+    # glBegin(GL_LINE_LOOP)
 
-    glColor(1,1,1)
-    glVertex3f(-0.05, -0.05, 0)
-    glVertex3f(-0.05, 0.05, 0)
-    glVertex3f(0.05, 0.05, 0)
-    glVertex3f(0.05, -0.05, 0)
+    # glColor(1,1,1)
+    # glVertex3f(-0.05, -0.05, 0)
+    # glVertex3f(-0.05, 0.05, 0)
+    # glVertex3f(0.05, 0.05, 0)
+    # glVertex3f(0.05, -0.05, 0)
 
-    glEnd()
+    # glEdnwad()
     glPopMatrix()
     
 def draw_cuadrado():
@@ -221,13 +226,37 @@ def draw_barrel():
     glPushMatrix()
     glTranslatef(posicion_barrel[0], posicion_barrel[1], 0.0)
     glBegin(GL_POLYGON)
-    glColor3f(0.9,0.9,0.3)    
+    glColor3f(150/255,62/255,0)    
     for i in range(100):    
         cosine= radius * cos(i*2*pi/sides)     
         sine  = radius * sin(i*2*pi/sides)   
         glVertex2f(cosine,sine)
     glEnd()
     glPopMatrix()      
+
+# def draw_game_over():
+#     glPushMatrix()
+#     glBegin(GL_QUADS)
+
+#     glColor3f(0.9, 0.2, 0.21)
+
+#     glVertex3f(-0.1,0.1,0.0)
+#     glVertex3f(0.1,0.1,0.0)
+#     glVertex3f(0.1,-0.1,0.0)
+#     glVertex3f(-0.1,-0.1,0.0)
+
+#     glEnd()
+
+#     glBegin(GL_LINE_LOOP)
+#     glColor(1,1,1)
+
+#     glVertex3f(-0.1,0.1,0.0)
+#     glVertex3f(0.1,0.1,0.0)
+#     glVertex3f(0.1,-0.1,0.0)
+#     glVertex3f(-0.1,-0.1,0.0)
+
+#     glEnd()
+#     glPopMatrix()
 
 
 #dibujos de decoracion 
