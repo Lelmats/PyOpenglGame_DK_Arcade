@@ -23,16 +23,9 @@ def draw_plataform_0_1():
     glVertex3f(-0.7,0.2,0.0)
 
     glEnd()
-    glBegin(GL_LINE_LOOP)
-
-    glColor(1,1,1)
+  
     
-    glVertex3f(-0.7,0.1,0.0)
-    glVertex3f(0.2,0.1,0.0)
-    glVertex3f(0.2,0.2,0.0)
-    glVertex3f(-0.7,0.2,0.0)
 
-    glEnd()
     glPopMatrix()
     
 def draw_plataform():
@@ -46,19 +39,130 @@ def draw_plataform():
     glVertex3f(0.8,0.1,0.0)
     glVertex3f(0.8,0.2,0.0)
     glVertex3f(0.0,0.2,0.0)
+    glEnd()
 
+    #LINEAS VERTICALE
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.9,0.1,0.0)
+    glVertex3f(-0.8,0.2,0.0)
     glEnd()
 
     glBegin(GL_LINE_LOOP)
-    glColor(1,1,1)
-    glVertex3f(0.0,0.1,0.0)
-    glVertex3f(0.8,0.1,0.0)
-    glVertex3f(0.8,0.2,0.0)
-    glVertex3f(0.0,0.2,0.0)
-
+    glColor(0,0,0)
+    glVertex3f(-0.7,0.1,0.0)
+    glVertex3f(-0.8,0.2,0.0)
     glEnd()
+  
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.7,0.1,0.0)
+    glVertex3f(-0.6,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.5,0.1,0.0)
+    glVertex3f(-0.6,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.5,0.1,0.0)
+    glVertex3f(-0.4,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.3,0.1,0.0)
+    glVertex3f(-0.4,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.3,0.1,0.0)
+    glVertex3f(-0.2,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.1,0.1,0.0)
+    glVertex3f(-0.2,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.1,0.1,0.0)
+    glVertex3f(0.0,0.2,0.0)
+    glEnd()
+    
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.1,0.1,0.0)
+    glVertex3f(0.0,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.1,0.1,0.0)
+    glVertex3f(0.2,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.3,0.1,0.0)
+    glVertex3f(0.2,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.3,0.1,0.0)
+    glVertex3f(0.4,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.5,0.1,0.0)
+    glVertex3f(0.4,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.5,0.1,0.0)
+    glVertex3f(0.6,0.2,0.0)
+    glEnd()
+    
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.7,0.1,0.0)
+    glVertex3f(0.6,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.7,0.1,0.0)
+    glVertex3f(0.8,0.2,0.0)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(0.9,0.1,0.0)
+    glVertex3f(0.8,0.2,0.0)
+    glEnd()
+  
+    glBegin(GL_LINE_LOOP)
+    glColor(0,0,0)
+    glVertex3f(-0.9,0.1,0.0)
+    glVertex3f(0.9,0.1,0.0)
+    glVertex3f(0.9,0.2,0.0)
+    glVertex3f(-0.9,0.2,0.0)
+    glEnd()
+  
+    
     glPopMatrix()
 
+   
 def draw_plataform_2():
     glPushMatrix()
     glTranslatef(posicion_plataforma_2[0], posicion_plataforma_2[1], 0.0)
@@ -73,6 +177,7 @@ def draw_plataform_2():
 
     glEnd()
     glPopMatrix()
+    
 
 def draw_plataform_3():
     glPushMatrix()
