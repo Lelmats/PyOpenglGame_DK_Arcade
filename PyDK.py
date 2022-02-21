@@ -22,6 +22,12 @@ mixer.music.play(-1)
 window = None
 velocidad = 0.5
 tiempo_anterior = 0.0
+velocidad_x = 0.5
+velocidad_y = 0.5
+JUMP = False
+IS_JUMPING = False
+IS_FALLING = False
+posicion_y_triangulo_anterior = 0.0
 
 posicion_cuadrado = [-0.4,0.9, 0.0]
 
@@ -35,6 +41,7 @@ def actualizar_barrel(tiempo_delta):
     global direccion_barrelx
     global direccion_barrely
     global velocidad_barrel
+    global tiempo_anterior
 
     cantidad_movimiento = velocidad_barrel * tiempo_delta
 
@@ -66,6 +73,10 @@ def actualizar():
     global cantidad_movimiento
     global estado_tecla_abajo
     global posicion_barrel
+    global velocidad_x, velocidad_y
+    global posicion_y_triangulo_anterior
+    global window, JUMP, IS_JUMPING, IS_FALLING 
+
 
     tiempo_actual = glfw.get_time()
     #Cuanto tiempo paso entre la ejecucion actual
@@ -94,16 +105,42 @@ def actualizar():
     if estado_tecla_izquierda == glfw.PRESS:
         posicion_triangulo[0] = posicion_triangulo[0] - cantidad_movimiento
 
-    # if estado_tecla_w == glfw.PRESS:
-    #     posicion_cuadrado[1] = posicion_cuadrado[1] + cantidad_movimiento
-    # if estado_tecla_d == glfw.PRESS:
-    #     posicion_cuadrado[0] = posicion_cuadrado[0] + cantidad_movimiento
-    # if estado_tecla_s == glfw.PRESS:
-    #     posicion_cuadrado[1] = posicion_cuadrado[1] - cantidad_movimiento
-    # if estado_tecla_a == glfw.PRESS:
-    #     posicion_cuadrado[0] = posicion_cuadrado[0] - cantidad_movimiento
-
     actualizar_barrel(tiempo_delta)
+
+    poder_salto = 1.5
+    vel_y = velocidad_y * tiempo_delta * poder_salto
+    gravedad = -0.3
+    cantidad_de_salto = 0.1
+    estado_tecla_space = glfw.get_key(window, glfw.KEY_SPACE)
+    
+    if JUMP is False and IS_JUMPING is False and estado_tecla_space == glfw.PRESS:
+        JUMP = True
+        posicion_y_triangulo_anterior = posicion_triangulo[1]
+
+    if JUMP is True:
+        # Añade a la y la velocidad_y a la velocidad anteiror
+        # Añade la velocidad del salto
+        posicion_triangulo[1] += vel_y
+        IS_JUMPING = True
+
+    # Ver si ya se paso de burger
+    if IS_JUMPING:
+        if posicion_triangulo[1] - posicion_y_triangulo_anterior >= cantidad_de_salto:
+            # print("Bruhc")
+            JUMP = False
+            vel_y = gravedad * tiempo_delta
+            posicion_triangulo[1] += vel_y
+            IS_FALLING = True
+
+    if IS_FALLING: 
+        vel_y = gravedad * tiempo_delta
+        posicion_triangulo[1] += vel_y
+
+        if posicion_triangulo[1] <= posicion_y_triangulo_anterior:
+            IS_JUMPING = False
+            JUMP = False
+            IS_FALLING = False
+            posicion_triangulo[1] = posicion_y_triangulo_anterior   
 
     tiempo_anterior = tiempo_actual
 
@@ -114,10 +151,10 @@ def colisionando():
     #Extrema izquierda del triangulo <= Extrema derecha cuadrado
     #Extremo superior del triangulo >= Extremo inferior del cuadrado
     #Extremo inferior del triangulo <= Extremo superior del cuadrado
-    if (posicion_triangulo[0] + 0.05 >= posicion_barrel[0] - 0.05
-    and posicion_triangulo[0] - 0.05 <= posicion_barrel[0] + 0.05 
-    and posicion_triangulo[1] + 0.05 >= posicion_barrel[1] - 0.05
-    and posicion_triangulo[1] - 0.05 <= posicion_barrel[1] + 0.05):
+    if (posicion_triangulo[0] + 0.05 >= posicion_barrel[0] - 0.01
+    and posicion_triangulo[0] - 0.05 <= posicion_barrel[0] + 0.01 
+    and posicion_triangulo[1] + 0.05 >= posicion_barrel[1] - 0.01
+    and posicion_triangulo[1] - 0.05 <= posicion_barrel[1] + 0.01):
         colisionando = True
     return colisionando
 
@@ -483,7 +520,6 @@ def draw_escalera():
     glVertex3f(-0.8,-0.8,0)
     glVertex3f(-0.9,-0.8,0)
     glEnd()
-
 
 def draw_explosiva():
     glBegin(GL_QUADS)
