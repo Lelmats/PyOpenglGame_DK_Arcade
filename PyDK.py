@@ -15,8 +15,8 @@ from draw_plataforms import *
 
 pygame.mixer.init()
 
-mixer.music.load("LVL_Music.wav")
-mixer.music.play(-1)
+# mixer.music.load("LVL_Music.wav")
+# mixer.music.play(-1)
 #proyecto parcial 1    
 #unidades por segundo
 window = None
@@ -27,16 +27,48 @@ velocidad_y = 0.5
 JUMP = False
 IS_JUMPING = False
 IS_FALLING = False
-posicion_y_triangulo_anterior = 0.0
 
+posicion_y_triangulo_anterior = 0.0
 posicion_cuadrado = [-0.4,0.9, 0.0]
 
 posicion_barrel = [-0.4,0.85, 0.0]
 direccion_barrelx = 1
 direccion_barrely = 0
-velocidad_barrel = 0.7
+velocidad_barrel = 0.9
 
+angulo_platano = 0.0
+direccion_platano = 1
+posicion_platano = [-0.9,0.85,0.0]
+velocidad_platano = 0.5
 
+def actualizar_platano(tiempo_delta):
+    global direccion_platano
+    global velocidad_platano
+    global posicion_platano
+
+    cantidad_movimiento = velocidad_platano * tiempo_delta
+
+    if direccion_platano == 1:
+        posicion_platano[0] = posicion_platano[0] + cantidad_movimiento
+        posicion_platano[1] = posicion_platano[1] + (
+            math.sin((angulo_platano + -90) * pi / 180.0) * cantidad_movimiento
+        )
+        if posicion_platano[0] >= 1:
+            direccion_platano = 0
+
+    if direccion_platano == 0:
+        posicion_platano[0] = posicion_platano[0] - cantidad_movimiento
+        posicion_platano[1] = posicion_platano[1] - (
+            math.sin((angulo_platano - 90) * pi / 180.0) * cantidad_movimiento
+        )
+        if posicion_platano[0] <= -1:
+            direccion_platano = 1
+
+    # if posicion_platano[1] <= -0.6:
+    #     posicion_platano[0] = posicion_platano[0] - cantidad_movimiento
+    #     posicion_platano[1] = posicion_platano[1] - (
+    #         math.sin((angulo_platano - 90) * pi / 180.0) * cantidad_movimiento
+    #     )
 def actualizar_barrel(tiempo_delta):
     global direccion_barrelx
     global direccion_barrely
@@ -66,21 +98,18 @@ def actualizar_barrel(tiempo_delta):
     
     if posicion_barrel[1] <= -0.9:
         posicion_barrel = [-0.4,0.85, 0.0]
+        velocidad_barrel = velocidad_barrel + 0.2
     
-
-def actualizar():
-    global tiempo_anterior
+def actualizar():    
     global window
-    global posicion_triangulo
-    global posicion_cuadrado
+    global tiempo_anterior    
     global estado_tecla_arriba
     global cantidad_movimiento
     global estado_tecla_abajo
-    global posicion_barrel
-    global velocidad_x, velocidad_y
-    global posicion_y_triangulo_anterior
-    global window, JUMP, IS_JUMPING, IS_FALLING 
-
+    global posicion_triangulo, posicion_barrel, posicion_cuadrado
+    global velocidad_x, velocidad_y, posicion_y_triangulo_anterior
+    global JUMP, IS_JUMPING, IS_FALLING 
+    global angulo_platano, fase
 
     tiempo_actual = glfw.get_time()
     #Cuanto tiempo paso entre la ejecucion actual
@@ -110,6 +139,7 @@ def actualizar():
         posicion_triangulo[0] = posicion_triangulo[0] - cantidad_movimiento
 
     actualizar_barrel(tiempo_delta)
+    actualizar_platano(tiempo_delta)
 
     poder_salto = 1.5
     vel_y = velocidad_y * tiempo_delta * poder_salto
@@ -159,6 +189,11 @@ def colisionando():
     and posicion_triangulo[0] - 0.05 <= posicion_barrel[0] + 0.01 
     and posicion_triangulo[1] + 0.05 >= posicion_barrel[1] - 0.01
     and posicion_triangulo[1] - 0.05 <= posicion_barrel[1] + 0.01):
+        colisionando = True
+    if (posicion_triangulo[0] + 0.05 >= posicion_cuadrado[0] - 0.01
+    and posicion_triangulo[0] - 0.05 <= posicion_cuadrado[0] + 0.01 
+    and posicion_triangulo[1] + 0.05 >= posicion_cuadrado[1] - 0.01
+    and posicion_triangulo[1] - 0.05 <= posicion_cuadrado[1] + 0.01):
         colisionando = True
     return colisionando
 
@@ -234,32 +269,6 @@ def draw_barrel():
     glEnd()
     glPopMatrix()      
 
-# def draw_game_over():
-#     glPushMatrix()
-#     glBegin(GL_QUADS)
-
-#     glColor3f(0.9, 0.2, 0.21)
-
-#     glVertex3f(-0.1,0.1,0.0)
-#     glVertex3f(0.1,0.1,0.0)
-#     glVertex3f(0.1,-0.1,0.0)
-#     glVertex3f(-0.1,-0.1,0.0)
-
-#     glEnd()
-
-#     glBegin(GL_LINE_LOOP)
-#     glColor(1,1,1)
-
-#     glVertex3f(-0.1,0.1,0.0)
-#     glVertex3f(0.1,0.1,0.0)
-#     glVertex3f(0.1,-0.1,0.0)
-#     glVertex3f(-0.1,-0.1,0.0)
-
-#     glEnd()
-#     glPopMatrix()
-
-
-#dibujos de decoracion 
 def draw_cajas():
     glPushMatrix()
     glTranslatef(0,-0.6,0)
@@ -575,6 +584,33 @@ def draw_explosiva():
     glVertex3f(-0.65,-0.25,0)
     glEnd()
 
+def draw_platano():
+    glPushMatrix()
+    glScale(0.8,0.8,0)
+    glTranslatef(posicion_platano[0], posicion_platano[1], 0.0)
+
+    glBegin(GL_POLYGON)
+    glColor3f(0.9, 1.0, 0.0)
+    glVertex3f(0.1,0.1,0.0)
+    glVertex3f(0.08,0.1,0.0)
+    glVertex3f(0.06,0.05,0.0)
+    glVertex3f(0.06,0.0,0.0)
+    glVertex3f(0.07,-0.05,0.0)
+    glVertex3f(0.1,-0.1,0.0)
+    glVertex3f(0.12,-0.1,0.0)
+
+    glEnd()
+
+    glBegin(GL_QUADS)
+    glColor3f(0.3,0.3,0.3)
+    glVertex3f(0.08,0.1,0.0)
+    glVertex3f(0.1,0.1,0.0)
+    glVertex3f(0.1,0.12,0.0)
+    glVertex3f(0.08,0.12,0.0)
+
+    glEnd()
+
+    glPopMatrix()
 
 def draw():  
     draw_plataform_0_1()
@@ -591,9 +627,15 @@ def draw():
     draw_plataform_6()   
     draw_plataform_7()   
     draw_cuadrado()
-    draw_triangulo()
     draw_barrel()
-    draw_plataform_3()
+    draw_cajas()
+    draw_explosiva()
+    draw_bote()
+    draw_letrero()
+    draw_barril()
+    draw_escalera()
+    draw_triangulo()
+    draw_platano()
 
 def main():
     global window
@@ -647,12 +689,7 @@ def main():
         actualizar()
         #Dibujar
         draw()
-        draw_cajas()
-        draw_explosiva()
-        draw_bote()
-        draw_letrero()
-        draw_barril()
-        draw_escalera()
+
         #Polling de inputs
         glfw.poll_events()
 
