@@ -715,7 +715,7 @@ def draw_letrero():
     glVertex3f(-0.86,-0.1,0)
     glEnd()
     
-    glBegin(GL_QUADS)
+    glBegin(GL_QUADS)  
     glColor3f(255/255,225/255,28/255)
     glVertex3f(-0.8,0.0,0)
     glVertex3f(-0.9,0.1,0)
