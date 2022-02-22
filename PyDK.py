@@ -21,12 +21,12 @@ pygame.mixer.init()
 #unidades por segundo
 window = None
 velocidad = 0.5
-tiempo_anterior = 0.0
 velocidad_x = 0.5
 velocidad_y = 0.5
 JUMP = False
 IS_JUMPING = False
 IS_FALLING = False
+tiempo_anterior = 0.0
 
 posicion_y_triangulo_anterior = 0.0
 posicion_cuadrado = [-0.4,0.9, 0.0]
@@ -38,13 +38,21 @@ velocidad_barrel = 0.9
 
 angulo_platano = 0.0
 direccion_platano = 1
-posicion_platano = [-0.9,0.85,0.0]
 velocidad_platano = 0.5
+rotacion_platano = 0
+velocidad_angular = 135.0
+posicion_platano = [-0.9,0.85,0.0]
 
 def actualizar_platano(tiempo_delta):
     global direccion_platano
     global velocidad_platano
     global posicion_platano
+    global rotacion_platano
+
+    cantidad_rotacion = velocidad_angular * tiempo_delta
+    rotacion_platano = rotacion_platano + cantidad_rotacion
+    if rotacion_platano > 360.0:
+        rotacion_platano = rotacion_platano - 360.0
 
     cantidad_movimiento = velocidad_platano * tiempo_delta
 
@@ -64,11 +72,6 @@ def actualizar_platano(tiempo_delta):
         if posicion_platano[0] <= -1:
             direccion_platano = 1
 
-    # if posicion_platano[1] <= -0.6:
-    #     posicion_platano[0] = posicion_platano[0] - cantidad_movimiento
-    #     posicion_platano[1] = posicion_platano[1] - (
-    #         math.sin((angulo_platano - 90) * pi / 180.0) * cantidad_movimiento
-    #     )
 def actualizar_barrel(tiempo_delta):
     global direccion_barrelx
     global direccion_barrely
@@ -194,6 +197,11 @@ def colisionando():
     and posicion_triangulo[0] - 0.05 <= posicion_cuadrado[0] + 0.01 
     and posicion_triangulo[1] + 0.05 >= posicion_cuadrado[1] - 0.01
     and posicion_triangulo[1] - 0.05 <= posicion_cuadrado[1] + 0.01):
+        colisionando = True
+    if (posicion_triangulo[0] + 0.05 >= posicion_platano[0] - 0.02
+    and posicion_triangulo[0] - 0.05 <= posicion_platano[0] + 0.02 
+    and posicion_triangulo[1] + 0.05 >= posicion_platano[1] - 0.05
+    and posicion_triangulo[1] - 0.05 <= posicion_platano[1] + 0.05):
         colisionando = True
     return colisionando
 
@@ -609,7 +617,6 @@ def draw_barriltwo():
     glEnd()
     glPopMatrix()  
 
-
 def draw_bote():
     glBegin(GL_QUADS)
     glColor3f(19/255,0,191/255)
@@ -715,7 +722,7 @@ def draw_letrero():
     glVertex3f(-0.86,-0.1,0)
     glEnd()
     
-    glBegin(GL_QUADS)  
+    glBegin(GL_QUADS)
     glColor3f(255/255,225/255,28/255)
     glVertex3f(-0.8,0.0,0)
     glVertex3f(-0.9,0.1,0)
@@ -724,7 +731,6 @@ def draw_letrero():
     glEnd()
 
     glPopMatrix() 
-
 
 def draw_explosiva():
     glBegin(GL_QUADS)
@@ -755,6 +761,7 @@ def draw_platano():
     glPushMatrix()
     glScale(0.8,0.8,0)
     glTranslatef(posicion_platano[0], posicion_platano[1], 0.0)
+    glRotatef(rotacion_platano,0.0,0.0,1.0)
 
     glBegin(GL_POLYGON)
     glColor3f(0.9, 1.0, 0.0)
@@ -801,6 +808,7 @@ def draw():
     draw_letrero()
     draw_barril()
     draw_triangulo()
+    draw_barriltwo()
     draw_platano()
 
 def main():
