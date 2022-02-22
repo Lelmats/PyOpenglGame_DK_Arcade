@@ -17,7 +17,7 @@ pygame.mixer.init()
 
 mixer.music.load("LVL_Music.wav")
 mixer.music.play(-1)
-
+#proyecto parcial 1    
 #unidades por segundo
 window = None
 velocidad = 0.5
@@ -178,7 +178,7 @@ def draw_triangulo():
 
     if colisionando_escaleras() and estado_tecla_abajo == glfw.PRESS:
         posicion_triangulo[1] = posicion_triangulo[1] - cantidad_movimiento
-
+ 
     glVertex3f(-0.05,-0.05,0)
     glVertex3f(0.0,0.05,0)
     glVertex3f(0.05,-0.05,0)
@@ -458,7 +458,7 @@ def draw_letrero():
 def draw_escalera():
     
     glBegin(GL_QUADS)
-    glColor3f(163/255,95/255,36/255)
+    glColor3f(3/255,252/255,244/255)
     glVertex3f(-0.8,1,0)
     glVertex3f(-0.9,1,0)
     glVertex3f(-0.9,-1,0)
