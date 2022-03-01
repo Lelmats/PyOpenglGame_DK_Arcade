@@ -1,14 +1,14 @@
 from fnmatch import translate
 from OpenGL.GL import *
 from glew_wish import *
-import math
 from math import *
-import pygame
-
 from pygame import mixer
-
+import pygame
+import math
 import glfw
 
+
+from Character import *
 from collision_escaleras import *
 from draw_stairs import *
 from draw_plataforms import *
@@ -17,18 +17,13 @@ pygame.mixer.init()
 
 # mixer.music.load("LVL_Music.wav")
 # mixer.music.play(-1)
-#proyecto parcial 1    
-#unidades por segundo
-window = None
-velocidad = 0.5
-velocidad_x = 0.5
-velocidad_y = 0.5
-JUMP = False
-IS_JUMPING = False
-IS_FALLING = False
-tiempo_anterior = 0.0
 
-posicion_y_triangulo_anterior = 0.0
+#proyecto parcial 1    
+
+#unidades por segundo
+
+window = None
+tiempo_anterior = 0.0
 posicion_cuadrado = [-0.4,0.9, 0.0]
 
 posicion_barrel = [-0.4,0.85, 0.0]
@@ -42,6 +37,9 @@ velocidad_platano = 0.5
 rotacion_platano = 0
 velocidad_angular = 135.0
 posicion_platano = [-0.9,0.85,0.0]
+
+player = Character()
+
 
 def actualizar_platano(tiempo_delta):
     global direccion_platano
@@ -109,10 +107,9 @@ def actualizar():
     global estado_tecla_arriba
     global cantidad_movimiento
     global estado_tecla_abajo
-    global posicion_triangulo, posicion_barrel, posicion_cuadrado
-    global velocidad_x, velocidad_y, posicion_y_triangulo_anterior
-    global JUMP, IS_JUMPING, IS_FALLING 
-    global angulo_platano, fase
+    global posicion_barrel, posicion_cuadrado
+    global angulo_platano
+
 
     tiempo_actual = glfw.get_time()
     #Cuanto tiempo paso entre la ejecucion actual
@@ -125,59 +122,59 @@ def actualizar():
     estado_tecla_derecha = glfw.get_key(window, glfw.KEY_RIGHT)
     estado_tecla_izquierda = glfw.get_key(window, glfw.KEY_LEFT)
 
-    estado_tecla_w = glfw.get_key(window, glfw.KEY_W)
-    estado_tecla_s = glfw.get_key(window, glfw.KEY_S)
-    estado_tecla_d = glfw.get_key(window, glfw.KEY_D)
-    estado_tecla_a = glfw.get_key(window, glfw.KEY_A)
+    # estado_tecla_w = glfw.get_key(window, glfw.KEY_W)
+    # estado_tecla_s = glfw.get_key(window, glfw.KEY_S)
+    # estado_tecla_d = glfw.get_key(window, glfw.KEY_D)
+    # estado_tecla_a = glfw.get_key(window, glfw.KEY_A)
 
     #Revisamos estados y realizamos acciones
-    cantidad_movimiento = velocidad * tiempo_delta
+    cantidad_movimiento = player.velocidad * tiempo_delta
     # if estado_tecla_arriba == glfw.PRESS:
     #     posicion_triangulo[1] = posicion_triangulo[1] + cantidad_movimiento
     if estado_tecla_derecha == glfw.PRESS:
-        posicion_triangulo[0] = posicion_triangulo[0] + cantidad_movimiento
+        player.posicion_triangulo_x = player.posicion_triangulo_x + cantidad_movimiento
     # if estado_tecla_abajo == glfw.PRESS:
     #     posicion_triangulo[1] = posicion_triangulo[1] - cantidad_movimiento
     if estado_tecla_izquierda == glfw.PRESS:
-        posicion_triangulo[0] = posicion_triangulo[0] - cantidad_movimiento
+        player.posicion_triangulo_x = player.posicion_triangulo_x - cantidad_movimiento
 
     actualizar_barrel(tiempo_delta)
     actualizar_platano(tiempo_delta)
 
     poder_salto = 1.5
-    vel_y = velocidad_y * tiempo_delta * poder_salto
+    vel_y = player.velocidad_y * tiempo_delta * poder_salto
     gravedad = -0.3
     cantidad_de_salto = 0.1
     estado_tecla_space = glfw.get_key(window, glfw.KEY_SPACE)
     
-    if JUMP is False and IS_JUMPING is False and estado_tecla_space == glfw.PRESS:
-        JUMP = True
-        posicion_y_triangulo_anterior = posicion_triangulo[1]
+    if player.JUMP is False and player.IS_JUMPING is False and estado_tecla_space == glfw.PRESS:
+        player.JUMP = True
+        player.posicion_y_triangulo_anterior = player.posicion_triangulo_y
 
-    if JUMP is True:
+    if player.JUMP is True:
         # Añade a la y la velocidad_y a la velocidad anteiror
         # Añade la velocidad del salto
-        posicion_triangulo[1] += vel_y
-        IS_JUMPING = True
+        player.posicion_triangulo_y += vel_y
+        player.IS_JUMPING = True
 
     # Ver si ya se paso de burger
-    if IS_JUMPING:
-        if posicion_triangulo[1] - posicion_y_triangulo_anterior >= cantidad_de_salto:
+    if player.IS_JUMPING:
+        if player.posicion_triangulo_y - player.posicion_y_triangulo_anterior >= cantidad_de_salto:
             # print("Bruhc")
-            JUMP = False
+            player.JUMP = False
             vel_y = gravedad * tiempo_delta
-            posicion_triangulo[1] += vel_y
-            IS_FALLING = True
+            player.posicion_triangulo_y += vel_y
+            player.IS_FALLING = True
 
-    if IS_FALLING: 
+    if player.IS_FALLING: 
         vel_y = gravedad * tiempo_delta
-        posicion_triangulo[1] += vel_y
+        player.posicion_triangulo_y += vel_y
 
-        if posicion_triangulo[1] <= posicion_y_triangulo_anterior:
-            IS_JUMPING = False
-            JUMP = False
-            IS_FALLING = False
-            posicion_triangulo[1] = posicion_y_triangulo_anterior   
+        if player.posicion_triangulo_y <= player.posicion_y_triangulo_anterior:
+            player.IS_JUMPING = False
+            player.JUMP = False
+            player.IS_FALLING = False
+            player.posicion_triangulo_y = player.posicion_y_triangulo_anterior   
 
     tiempo_anterior = tiempo_actual
 
@@ -188,26 +185,26 @@ def colisionando():
     #Extrema izquierda del triangulo <= Extrema derecha cuadrado
     #Extremo superior del triangulo >= Extremo inferior del cuadrado
     #Extremo inferior del triangulo <= Extremo superior del cuadrado
-    if (posicion_triangulo[0] + 0.05 >= posicion_barrel[0] - 0.01
-    and posicion_triangulo[0] - 0.05 <= posicion_barrel[0] + 0.01 
-    and posicion_triangulo[1] + 0.05 >= posicion_barrel[1] - 0.01
-    and posicion_triangulo[1] - 0.05 <= posicion_barrel[1] + 0.01):
+    if (player.posicion_triangulo_x + 0.05 >= posicion_barrel[0] - 0.01
+    and player.posicion_triangulo_x - 0.05 <= posicion_barrel[0] + 0.01 
+    and player.posicion_triangulo_y + 0.05 >= posicion_barrel[1] - 0.01
+    and player.posicion_triangulo_y - 0.05 <= posicion_barrel[1] + 0.01):
         colisionando = True
-    if (posicion_triangulo[0] + 0.05 >= posicion_cuadrado[0] - 0.01
-    and posicion_triangulo[0] - 0.05 <= posicion_cuadrado[0] + 0.01 
-    and posicion_triangulo[1] + 0.05 >= posicion_cuadrado[1] - 0.01
-    and posicion_triangulo[1] - 0.05 <= posicion_cuadrado[1] + 0.01):
+    if (player.posicion_triangulo_x + 0.05 >= posicion_cuadrado[0] - 0.01
+    and player.posicion_triangulo_x - 0.05 <= posicion_cuadrado[0] + 0.01 
+    and player.posicion_triangulo_y + 0.05 >= posicion_cuadrado[1] - 0.01
+    and player.posicion_triangulo_y - 0.05 <= posicion_cuadrado[1] + 0.01):
         colisionando = True
-    if (posicion_triangulo[0] + 0.05 >= posicion_platano[0] - 0.02
-    and posicion_triangulo[0] - 0.05 <= posicion_platano[0] + 0.02 
-    and posicion_triangulo[1] + 0.05 >= posicion_platano[1] - 0.05
-    and posicion_triangulo[1] - 0.05 <= posicion_platano[1] + 0.05):
+    if (player.posicion_triangulo_x + 0.05 >= posicion_platano[0] - 0.02
+    and player.posicion_triangulo_x - 0.05 <= posicion_platano[0] + 0.02 
+    and player.posicion_triangulo_y + 0.05 >= posicion_platano[1] - 0.05
+    and player.posicion_triangulo_y - 0.05 <= posicion_platano[1] + 0.05):
         colisionando = True
     return colisionando
 
 def draw_triangulo():
     glPushMatrix()
-    glTranslatef(posicion_triangulo[0], posicion_triangulo[1],0.0)
+    glTranslatef(player.posicion_triangulo_x, player.posicion_triangulo_y,0.0)
 
     glBegin(GL_TRIANGLES)
     if colisionando():
@@ -217,10 +214,10 @@ def draw_triangulo():
         glColor3f(1,0,0.7)
 
     if colisionando_escaleras() and estado_tecla_arriba == glfw.PRESS :
-        posicion_triangulo[1] = posicion_triangulo[1] + cantidad_movimiento
+        player.posicion_triangulo_y = player.posicion_triangulo_y + cantidad_movimiento
 
     if colisionando_escaleras() and estado_tecla_abajo == glfw.PRESS:
-        posicion_triangulo[1] = posicion_triangulo[1] - cantidad_movimiento
+        player.posicion_triangulo_y = player.posicion_triangulo_y - cantidad_movimiento
  
     glVertex3f(-0.05,-0.05,0)
     glVertex3f(0.0,0.05,0)
