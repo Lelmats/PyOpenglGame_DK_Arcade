@@ -1,7 +1,7 @@
+from collision_escaleras import colisionando_escaleras
 from OpenGL.GL import *
 from glew_wish import *
 import glfw
-from collision_escaleras import colisionando_escaleras
 
 class Character:
     posicion_triangulo_x = 0
