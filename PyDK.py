@@ -6,7 +6,7 @@ from Character import *
 from Barril import *
 from Enemy import *
 from Platano import *
-from Escaleras import *
+from Escaleras import Escaleras
 from Fondo import *
 
 from pygame import mixer
@@ -25,11 +25,11 @@ player = Player()
 barril_mov = Barril()
 enemy = Enemy()
 platano = Platano()
-escaleras = Escaleras()
+# escaleras = Escaleras()
 fondo = Fondo()
 tiempo_anterior = 0.0
 
-# escaleras = []
+escaleras = []
 
 def colisionando():
     colisionando = False
@@ -47,7 +47,9 @@ def actualizar():
     tiempo_actual = glfw.get_time()
     tiempo_delta = tiempo_actual - tiempo_anterior
 
-
+    cantidad_movimiento = player.velocidad * tiempo_delta
+    estado_tecla_arriba = glfw.get_key(window, glfw.KEY_UP)
+    estado_tecla_abajo = glfw.get_key(window, glfw.KEY_DOWN)
 
     if player.vivo:
         player.actualizar(window, tiempo_delta)
@@ -55,15 +57,27 @@ def actualizar():
             player.vivo = False
         if player.colisionando(barril_mov):
             player.vivo = False
+        for escalera in escaleras:
+            if player.colisionando(escalera) and estado_tecla_arriba == glfw.PRESS:
+                player.posicion_y = player.posicion_y + cantidad_movimiento
+            if player.colisionando(escalera) and estado_tecla_abajo == glfw.PRESS:
+                player.posicion_y = player.posicion_y - cantidad_movimiento
 
         barril_mov.actualizar_barrel(tiempo_delta)
         platano.actualizar_platano(tiempo_delta)
     
+
+    
     tiempo_anterior = tiempo_actual
 
-# def escaleras_init():
-#     for i in range(10):
-#         escaleras.append(Escaleras(0.6, 0.6, 0, 0))
+def escaleras_init():
+    escaleras.append(Escaleras(0.6,-0.6))
+    escaleras.append(Escaleras(0.6,0.0))
+    escaleras.append(Escaleras(0.6,0.6))
+    escaleras.append(Escaleras(-0.5,0.3))
+    escaleras.append(Escaleras(-0.5,-0.3))
+
+
 
 def draw():  
     fondo.draw_plataform_0_1()
@@ -74,7 +88,8 @@ def draw():
     fondo.draw_plataform_5()   
     fondo.draw_plataform_6()   
     fondo.draw_plataform_7()   
-    escaleras.draw_escaleras()
+    for escalera in escaleras:
+        escalera.draw_escaleras()
     enemy.draw_cuadrado()
     barril_mov.draw_barrel()
     fondo.draw_cajas()
@@ -127,7 +142,7 @@ def main():
     version = glGetString(GL_VERSION)
     print(version)
 
-    # escaleras_init()
+    escaleras_init()
 
     #Draw loop
     while not glfw.window_should_close(window):

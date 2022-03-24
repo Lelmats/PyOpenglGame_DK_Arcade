@@ -209,8 +209,6 @@ class Player(Modelo):
         
         glPopMatrix()
 
-        self.dibujar_bounding_box()
-
     def actualizar(self, window, tiempo_delta):
         if self.vivo: 
             global tiempo_anterior

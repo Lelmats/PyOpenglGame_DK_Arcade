@@ -1,4 +1,5 @@
 from msilib.schema import Class
+from re import X
 from OpenGL.GL import *
 from glew_wish import *
 from math import *
@@ -7,13 +8,15 @@ import glfw
 
 class Escaleras(Modelo):
 
-    def __init__(self):
-        super().__init__(0.6,-0.6,0.0,0.5,0.0)
+    def __init__(self,x,y):
+        super().__init__()
         # super().__init__(0.6,-0.6,0.0,0.5,0.0)
-        self.extremo_izquierdo = 0.02
-        self.extremo_derecho = 0.02
-        self.extremo_inferior = 0.05
-        self.extremo_superior = 0.05
+        self.posicion_x = x
+        self.posicion_y = y
+        self.extremo_izquierdo = 0.00
+        self.extremo_derecho = 0.1
+        self.extremo_inferior = 0.0
+        self.extremo_superior = 0.23
 
     def draw_escaleras(self):
         glPushMatrix()
@@ -76,5 +79,6 @@ class Escaleras(Modelo):
         glEnd() 
 
         glPopMatrix()
+
 
     # def actualizar_escaleras(self, tiempo_delta):

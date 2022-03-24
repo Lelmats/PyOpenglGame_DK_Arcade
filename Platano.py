@@ -52,7 +52,6 @@ class Platano(Modelo):
 
         glPopMatrix()
 
-        self.dibujar_bounding_box()
 
     def actualizar_platano(self, tiempo_delta):
 
