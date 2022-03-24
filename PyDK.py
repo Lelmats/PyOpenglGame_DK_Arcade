@@ -29,6 +29,7 @@ escaleras = Escaleras()
 fondo = Fondo()
 tiempo_anterior = 0.0
 
+# escaleras = []
 
 def colisionando():
     colisionando = False
@@ -46,6 +47,8 @@ def actualizar():
     tiempo_actual = glfw.get_time()
     tiempo_delta = tiempo_actual - tiempo_anterior
 
+
+
     if player.vivo:
         player.actualizar(window, tiempo_delta)
         if player.colisionando(platano):
@@ -59,9 +62,8 @@ def actualizar():
     tiempo_anterior = tiempo_actual
 
 # def escaleras_init():
-#     escaleras.append(Escaleras(0.6, 0.6, 0, 0))
-
-#     # Escalera1 = Escaleras(-0.4, 0.7, 45.0, 1.0)
+#     for i in range(10):
+#         escaleras.append(Escaleras(0.6, 0.6, 0, 0))
 
 def draw():  
     fondo.draw_plataform_0_1()
@@ -72,6 +74,7 @@ def draw():
     fondo.draw_plataform_5()   
     fondo.draw_plataform_6()   
     fondo.draw_plataform_7()   
+    escaleras.draw_escaleras()
     enemy.draw_cuadrado()
     barril_mov.draw_barrel()
     fondo.draw_cajas()
@@ -82,7 +85,8 @@ def draw():
     player.draw()
     fondo.draw_barriltwo()
     platano.draw_platano()
-    escaleras.draw_escaleras()
+
+    # escaleras.draw_escaleras()
 
 def main():
     global window

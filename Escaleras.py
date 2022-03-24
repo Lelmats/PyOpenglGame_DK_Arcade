@@ -8,7 +8,7 @@ import glfw
 class Escaleras(Modelo):
 
     def __init__(self):
-        super().__init__(0.0,0.0,0.0,0.5,0.0)
+        super().__init__(0.6,-0.6,0.0,0.5,0.0)
         # super().__init__(0.6,-0.6,0.0,0.5,0.0)
         self.extremo_izquierdo = 0.02
         self.extremo_derecho = 0.02

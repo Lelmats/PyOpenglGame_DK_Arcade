@@ -24,9 +24,10 @@ class Platano(Modelo):
 
     def draw_platano(self):
         glPushMatrix()
-        glScale(0.8,0.8,0)
+        
         glTranslatef(self.posicion_x, self.posicion_y, 0.0)
         glRotatef(self.rotacion_platano,0.0,0.0,1.0)
+        glScalef(0.8,0.8,0)
 
         glBegin(GL_POLYGON)
         glColor3f(0.9, 1.0, 0.0)
@@ -57,6 +58,7 @@ class Platano(Modelo):
 
         cantidad_rotacion = self.velocidad_angular * tiempo_delta
         self.rotacion_platano = self.rotacion_platano + cantidad_rotacion
+        
         if self.rotacion_platano > 360.0:
             self.rotacion_platano = self.rotacion_platano - 360.0
 

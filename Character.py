@@ -30,17 +30,186 @@ class Player(Modelo):
         if self.vivo:
             glPushMatrix()
             glTranslatef(self.posicion_x, self.posicion_y,0.0)
+        #CUERPO
 
-            glBegin(GL_TRIANGLES)
+        glPushMatrix()
+        glTranslatef(-0.045,-0.03,0)
+        glScalef(0.2,0.5,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(252/255, 230/255, 164/255)
+        glVertex3f(0.01,0.02,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.02,0)
+        glEnd()
 
-            glVertex3f(-0.05,-0.05,0)
-            glVertex3f(0.0,0.05,0)
-            glVertex3f(0.05,-0.05,0)
-            glEnd()
+        glPopMatrix()
 
-            glPopMatrix()
+        glPushMatrix()
+        glTranslatef(0.03,-0.03,0)
+        glScalef(0.2,0.5,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(252/255, 230/255, 164/255)
+        glVertex3f(0.01,0.02,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.02,0)
+        glEnd()
 
-            self.dibujar_bounding_box()
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(-0.045,-0.03,0)
+        glScalef(0.2,1,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(0, 81/255, 212/255)
+        glVertex3f(0.01,0.02,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.02,0)
+        glEnd()
+
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(0.03,-0.03,0)
+        glScalef(0.2,1,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(0, 81/255, 212/255)
+        glVertex3f(0.01,0.02,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.02,0)
+        glEnd()
+
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(0.024,-0.026,0)
+            
+        glBegin(GL_QUADS)
+        glColor3f(1,0,0)
+
+        glVertex3f(0,-0.01,0)
+        glVertex3f(0,0.085,0)
+        glVertex3f(-0.08,0.085,0)
+        glVertex3f(-0.08,-0.01,0)
+        glEnd()
+
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(0,0.02,0)
+        glScalef(0.3,0.2,0)
+
+        glBegin(GL_QUADS)
+        glColor3f(0, 36/255, 181/255)
+
+        glVertex3f(0,-0.01,0)
+        glVertex3f(0,0.085,0)
+        glVertex3f(-0.08,0.085,0)
+        glVertex3f(-0.08,-0.01,0)
+        glEnd()
+
+        glPopMatrix()
+
+        #CABEZA
+        glPushMatrix()
+
+        glPushMatrix()
+        glTranslatef(0.01,0.09,0)
+        glScalef(0.5,0.35,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(1,0,0)
+        glVertex3f(0,-0.01,0)
+        glVertex3f(0,0.085,0)
+        glVertex3f(-0.1,0.085,0)
+        glVertex3f(-0.1,-0.01,0)
+        glEnd()
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(0.01,0.06,0)
+        glScalef(0.52,0.6,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(252/255, 230/255, 164/255)
+        glVertex3f(0,-0.01,0)
+        glVertex3f(0,0.085,0)
+        glVertex3f(-0.1,0.085,0)
+        glVertex3f(-0.1,-0.01,0)
+        glEnd()
+        glPopMatrix()
+
+        #PATAS
+        glPushMatrix()
+        glTranslatef(-0.03,-0.125,0)
+        glScalef(0.2,1,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(0, 81/255, 212/255)
+        glVertex3f(0.01,0.05,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.05,0)
+        glEnd()
+
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(0.02,-0.125,0)
+        glScalef(0.2,1,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(0, 81/255, 212/255)
+        glVertex3f(0.01,0.05,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.05,0)
+        glEnd()
+
+        glPushMatrix()
+        glTranslatef(0,0.02,0)
+        glScalef(1,0.4,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(252/255, 230/255, 164/255)
+        glVertex3f(0.01,0.05,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.05,0)
+        glEnd()
+
+        glPushMatrix()
+        glTranslatef(-0.25,0,0)
+        glScalef(1,1,0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(252/255, 230/255, 164/255)
+        glVertex3f(0.01,0.05,0)
+        glVertex3f(0.01,0.09,0)
+        glVertex3f(-0.1,0.09,0)
+        glVertex3f(-0.1,0.05,0)
+        glEnd()
+        
+
+        glPopMatrix()
+        
+
+        glPopMatrix()
+
+        glPopMatrix()
+
+        glPopMatrix()
+        
+        glPopMatrix()
+
+        self.dibujar_bounding_box()
 
     def actualizar(self, window, tiempo_delta):
         if self.vivo: 
